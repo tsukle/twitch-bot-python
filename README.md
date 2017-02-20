@@ -26,12 +26,12 @@ The built bot is very simple to run. Upon downloading the folder and placing it 
  you will find a bunch of files, the one you need to focus on is:
  >`settings.json`
 
- This file is where you need to feed in your bot accounts:
- * *Username*
+This file is where you need to feed in your bot accounts:
+ * *Bot Account Username*
  * *OAuth Key (Get it [here](https://twitchapps.com/tmi/))*
  * *Channel Name*
 
- The finished product should look something like this:
+The finished product should look something like this:
  ```javascript
 {
     "username": "tsuklebot",
