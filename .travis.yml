@@ -4,5 +4,5 @@ python:
     - "3.5-dev" # Dev build.
     - "3.6"
 install:
-- pip install pyinstaller # if you want to build the source code.
+- pip install colorama # if you want to build the source code.
 script: pytest
