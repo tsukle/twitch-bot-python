@@ -3,4 +3,4 @@ python:
     - "3.5"
 install:
 - pip install colorama # if you want to build the source code.
-script: source\ code/pytest
+script: pytest
