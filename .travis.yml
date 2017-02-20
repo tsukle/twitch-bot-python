@@ -4,4 +4,4 @@ python:
 install:
     - pip install colorama # if you want to build the source code.
 before_script: cd Source\ Code
-script: pytest
+script: main.py
