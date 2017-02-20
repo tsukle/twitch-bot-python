@@ -26,12 +26,12 @@ The built bot is very simple to run. Upon downloading the folder and placing it 
  you will find a bunch of files, the one you need to focus on is:
  >`settings.json`
 
- This file is where you need to feed in your bot accounts:
- * *Username*
+This file is where you need to feed in your bot accounts:
+ * *Bot Account Username*
  * *OAuth Key (Get it [here](https://twitchapps.com/tmi/))*
  * *Channel Name*
 
- The finished product should look something like this:
+The finished product should look something like this:
  ```javascript
 {
     "username": "tsuklebot",
@@ -77,7 +77,7 @@ These messages will alert you when you have successfully added or removed a comm
 If you want to mess with the source code I recommend you use [Python 3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe)
 or onwards. The code was compiled and built using [PyInstaller](http://www.pyinstaller.org/), if you wish to do the same with your
 changed code then do not use [Python 3.6](https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe) as it is not yet supported, 
-use [3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe).
+use [3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe). After compiling it you will need to remake the `settings.json` file in the build directory.
 
 The program also uses a module called [Colorama](https://pypi.python.org/pypi/colorama) for the console 
 colors which you may need to install yourself depending on the version of Python you have, if it throws an error about colorama when 
