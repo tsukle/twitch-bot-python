@@ -5,4 +5,3 @@ python:
     - "3.6"
 install:
 - pip install pyinstaller # if you want to build the source code.
-script: main.py
