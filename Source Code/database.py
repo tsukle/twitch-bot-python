@@ -39,6 +39,7 @@ def getCommandList():
     x = "Commands: "
     c.execute("SELECT command FROM Commands")
     d = c.fetchall()
+    #enumerate d and add commands to the string until
     for index, com in enumerate(d):
         res = com[0]
         if(index >= len(d) - 1):
