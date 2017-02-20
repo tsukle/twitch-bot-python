@@ -32,7 +32,7 @@ The built bot is very simple to run. Upon downloading the folder and placing it 
  * *Channel Name*
 
  The finished product should look something like this:
- ```json
+ ```javascript
 {
     "username": "tsuklebot",
     "authkey": "oauth:...",
