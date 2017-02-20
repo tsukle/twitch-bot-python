@@ -72,8 +72,8 @@ These messages will alert you when you have successfully added or removed a comm
 
  ------
 
- ## - Programmers ![Kappa](https://static-cdn.jtvnw.net/emoticons/v1/25/1.0 "Kappa")
- If you want to mess with the source code I recommend you use [Python 3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe)
+## - Programmers ![Kappa](https://static-cdn.jtvnw.net/emoticons/v1/25/1.0 "Kappa")
+If you want to mess with the source code I recommend you use [Python 3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe)
 or onwards. The code was compiled and built using [PyInstaller](http://www.pyinstaller.org/), if you wish to do the same with your
 changed code then do not use [Python 3.6](https://www.python.org/ftp/python/3.6.0/python-3.6.0.exe) as it is not yet supported, 
 use [3.5](https://www.python.org/ftp/python/3.5.0/python-3.5.0.exe).
