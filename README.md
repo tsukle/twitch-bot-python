@@ -47,6 +47,7 @@ Once you have done this, save the file and open the bot.exe file in the folder. 
 ## - Using The Bot ![CoolStoryBob](https://static-cdn.jtvnw.net/emoticons/v1/123171/1.0 "CoolStoryBob")
 Now that you have the bot up and running. Here are the basics to controlling it and adding commands.  
 >Channel Owner Commands:
+
 * *`!addcom` - Adds a command to the database.*
     * *Usage: !addcom [command] [response]*
     * *Example: !addcom !test this is a test command.*
@@ -55,6 +56,7 @@ Now that you have the bot up and running. Here are the basics to controlling it 
     * *Example: !delcom !test*
 
 >Typical Commands:
+
 * *`!commands` - Lists all of the commands currently in the database.*
     * *Usage: !commands*
 
