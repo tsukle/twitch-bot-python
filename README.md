@@ -5,10 +5,13 @@ This project is not complete but it is at a basic and working state, I will be a
 
 ------
 
-## - Moderator Functions
-The current working bot does not have any functionality to work with moderator groups or groups in general, this branch is focused on the work being put forward to that.  
+## - Users
+This branch is dedicated to pulling extra tags from the IRC messages in order to give each user an array attribute which will hold values
+such as `user-type` and `username` which can be used for command management and chat control.
+
 
 Current plans with this branch:  
-* *Giving commands usage groups.*
+* *Make user an array holding attributing tags*
+* *Give commands usage groups.*
     - *!addcom !test !owner|moderator|everyone| [response]*
 * *Let moderators add commands (if the channel owner chooses to allow it)*
