@@ -44,9 +44,10 @@ def chat():
 
         for line in message:
             response = info(line)
-            if(response["display-name"] == "twitch" or response["display-name"] = opt["username"]):
+            if(response["display-name"] == "twitch" or response["display-name"].lower() == opt["username"]):
                 a = 1
             else:
+                print(Back.WHITE + Fore.BLACK + " " + response["display-name"] + " " + Style.RESET_ALL + " > " + response["message"])
                 yield response
 
 #------------------------------------------------------------------------------------------------
