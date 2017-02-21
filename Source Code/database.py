@@ -6,7 +6,6 @@ c = db.cursor()
 #This creates the commands table if it does not exist
 def createTable():
     c.execute("CREATE TABLE IF NOT EXISTS Commands(command TEXT, response TEXT)")
-    c.execute("CREATE TABLE IF NOT EXISTS Moderators(name TEXT)") # Store them for now, might use it, might not.
 
 #query adds command/response to the commands table
 def addCommand(com, response):
