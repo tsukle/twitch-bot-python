@@ -66,8 +66,8 @@ The return data from `client.chat()` is a dictionary (python's json) containing 
 
 To use any of the above dictionary objects in your bot you just call `data["name-of-object"]`.  
 For example:  
-```
-    data["mod"]    <== This will either return a 1 or 0 depending on if they are a moderator.
+```python
+    data["mod"] # This will either return a 1 or 0 depending on if they are a moderator.
 ```
 
 You shouldn't be short of returned data to mess with.
