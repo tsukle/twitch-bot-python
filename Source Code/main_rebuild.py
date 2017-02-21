@@ -1,8 +1,8 @@
-import events_rebuild
+import twitchpy
 
 #------------------------------------------------------------------------------------------------
 # Variables
-client = events_rebuild
+client = twitchpy
 
 #------------------------------------------------------------------------------------------------
 # Chat and Command Center
