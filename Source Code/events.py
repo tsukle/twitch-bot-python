@@ -54,10 +54,6 @@ def AFKCheck():
     s.send((msgConstruct + "\r\n").encode())
     print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > AFK Check complete ")
 
-
-def getInfo(line):
-    
-
 #Takes IRC line and splits it | returns name
 def getUser(msg):
     return msg

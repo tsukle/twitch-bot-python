@@ -1,4 +1,5 @@
 import events
+import events_rebuild
 import os
 import database
 from time import sleep
@@ -9,6 +10,7 @@ os.system("mode con cols=120 lines=50")
 
 #Initial Setup | Configures the socket creation and loads chat in console.
 bot = events
+bot2 = events_rebuild
 bot.setup()
 botSocket = bot.createSocket()
 
@@ -32,7 +34,8 @@ while True:
         message = bot.getMessage(line)
         message = str(message)
         print(line)
-        
+        bot2.info(line)
+
         ############################################################################################
         ######COMMENTED OUT SO I CAN SEE WHAT THE NEW RESPONSES ARE TO FIND USERSTATE ETC...########
         ############################################################################################
