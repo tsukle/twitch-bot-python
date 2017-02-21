@@ -8,7 +8,7 @@ init(autoreset=True)
 s = socket.socket()
 db = database
 
-with open("settings.json") as data:
+with open("settings_personal.json") as data:
     settings = json.load(data)
 
 def setup():
@@ -26,6 +26,9 @@ def createSocket():
     s.connect(("irc.twitch.tv", 6667))
     s.send(("PASS " + settings["authkey"] + "\r\n").encode())
     s.send(("NICK " + settings["username"] + "\r\n").encode())
+    s.send(("CAP REQ :twitch.tv/membership\r\n").encode())
+    s.send(("CAP REQ :twitch.tv/commands\r\n").encode())
+    s.send(("CAP REQ :twitch.tv/tags\r\n").encode())
     s.send(("JOIN #" + settings["channel"] + "\r\n").encode())
     return s
 
@@ -51,36 +54,34 @@ def AFKCheck():
     s.send((msgConstruct + "\r\n").encode())
     print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > AFK Check complete ")
 
+
+def getInfo(line):
+    
+
 #Takes IRC line and splits it | returns name
 def getUser(msg):
-    spliced = msg.split(":", 2) #1: gets rid of the first colon it finds    2: gets rid of the first two it finds and splits it
-    user = spliced[1].split("!", 1)[0]
-    if("tmi.twitch.tv" in user):
-        user = "twitch"
-        return user
-    elif("tsuklebot" in user):
-        user = "bot"
-        return user
-    else:
-        return user
+    return msg
+    #spliced = msg.split(":", 2) #1: gets rid of the first colon it finds    2: gets rid of the first two it finds and splits it
+    #user = spliced[1].split("!", 1)[0]
+    #if("tmi.twitch.tv" in user):
+        #user = "twitch"
+       # return user
+    #elif("tsuklebot" in user):
+        #user = "bot"
+       # return user
+    #else:
+        #return user
 
 
 #Takes IRC line and splits it | returns message
 def getMessage(msg):
-    if(".tmi.twitch.tv JOIN" in msg):
-        message = "x5edtxmWKwx5ed"
-        return str(message)
-
-    elif("End of /NAMES list" in msg):
-        message = "x5edtxmWKw"
-        return message
-
-    elif("PING :tmi.twitch.tv" in msg):
+    if("PING :tmi.twitch.tv" in msg):
         AFKCheck()
 
     else:
-        spliced = msg.split(":", 2) #1: gets rid of the first colon it finds    2: gets rid of the first two it finds and splits it
-        message = spliced[2]
+        message = msg
+        #spliced = msg.split(":", 2) #1: gets rid of the first colon it finds    2: gets rid of the first two it finds and splits it
+        #message = spliced[2]
         return str(message)
 
 #Splices owner command and adds new command to database
