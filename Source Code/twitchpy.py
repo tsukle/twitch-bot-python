@@ -1,6 +1,6 @@
 import socket
 import json
-import database
+import database #This will be used at a later point
 from colorama import init, Fore, Back, Style
 from time import sleep
 
@@ -21,7 +21,7 @@ with open("settings_personal.json") as data:
 
 
 #------------------------------------------------------------------------------------------------
-# Create an IRC connection and view Chat
+# Create an IRC connection
 def connect():
     s.connect(("irc.twitch.tv", 6667))
     s.send(("CAP REQ :twitch.tv/membership\r\n").encode())
@@ -32,7 +32,9 @@ def connect():
     s.send(("JOIN #" + opt["channel"] + "\r\n").encode())
     return s
 
-def chat():
+#------------------------------------------------------------------------------------------------
+# Chat
+def chat(setCommands = None):
     display = "".encode()
     con = connect()
     while True:
@@ -44,24 +46,59 @@ def chat():
 
         for line in message:
             response = info(line)
+            # We do not want to return this data.
             if(response["display-name"] == "twitch" or response["display-name"].lower() == opt["username"]):
-                a = 1
+                dontDoAnything = 1
+
+            # This is a command (Do something with it.).
+            elif(response["user-type"] == "mod" and setCommands == True and response["message"].startswith("!addcom")):
+                spliced = response["message"].split(" ", 3) #Split it 3 times ("!addcom", "user-level", "!command", "response")
+                level = spliced[1]
+                command = spliced[2]
+                response = spliced[3]
+
+                # Don't allow hard-coded commands to be added
+                if(command == "!addcom" or command == "!delcom"):
+                    dontDoAnything = 1
+
+                # Allow any other commands
+                else:
+                    returned = db.addCommand(command, response, level)
+                    if (returned != 0):
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Added to the database.")
+                    
+                    else:
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
+            
+            # This is a command (Do something with it.).
+            elif(response["user-type"] == "mod" and setCommands == True and response["message"].startswith("!delcom")):
+                spliced = response["message"].split(" ", 1)
+                pre = spliced[1]
+                post = pre.split("\r")
+                command = post[0]
+                returned = db.removeCommand(command)
+                if (returned == 1):
+                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Removed from the database.")
+                else:
+                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
+
+            # We want to return this good stuff.
             else:
-                print(Back.WHITE + Fore.BLACK + " " + response["display-name"] + " " + Style.RESET_ALL + " > " + response["message"])
+                print(Back.WHITE + Fore.BLACK + " " + response["display-name"].upper() + " " + Style.RESET_ALL + " > " + response["message"])
                 yield response
 
 #------------------------------------------------------------------------------------------------
 # Bot events
-def send(message, sp = None): # Send a chat message (if s is true, the message with append /me)
+def send(message, sp = None): # Send a chat message (if s is true, the message will append /me)
     if(sp is None):
         construct = "PRIVMSG #" + opt["channel"] + " :" + message + "\r\n"
         s.send((construct).encode())
-        print("Sent > " + message)
+        print(Back.YELLOW + Fore.BLACK + " BOT " + Style.RESET_ALL + " > " + message)
         sleep(1.5)
     else:
         construct = "PRIVMSG #" + opt["channel"] + " :/me " + message + "\r\n"
         s.send((construct).encode())
-        print("Sent > " + message)
+        print(Back.YELLOW + Fore.BLACK + " BOT " + Style.RESET_ALL + " > " + message)
         sleep(1.5)
 
 def afk(): # This responds to Twitch's afk PING requests.
@@ -77,21 +114,14 @@ def info(uin):
 
         inputSplit = uin.split(":") # Any input from the user will always give 5 objects, the rest are from twitch.
 
-        # Gets the message sent and the channel it was sent from.
+        #This is a check to stop these messages from being sent to chat.
         if(":jtv MODE" in uin or "GLOBALUSERSTATE" in uin or "USERSTATE" in uin or "ROOMSTATE" in uin or "JOIN #" in uin or "tmi.twitch.tv 353" in uin or "tmi.twitch.tv 366" in uin):
-            info["message"] = "twitch info message"
-            info["channel"] = ""
-            info["sent-ts"] = ""
-            info["user-id"] = ""
-            info["@badges"] = ""
             info["display-name"] = "twitch"
-            info["mod"] = "0"
-            info["subscriber"] = "0"
-            info["user-type"] = ""
         
         elif(uin.startswith("PING")):
             afk()
         
+        # Gets the message sent and the channel it was sent from.
         elif(len(inputSplit) == 3):
             msgInit = inputSplit[2]
             message = msgInit.split("\r")[0]
@@ -120,7 +150,7 @@ def info(uin):
 
         inputSplit = uin.split(" ") # Any input from the user will always give 5 objects, the rest are from twitch.
 
-        info["message"] = "twitch info message"
+        info["message"] = ""
         info["channel"] = ""
         info["sent-ts"] = ""
         info["user-id"] = ""

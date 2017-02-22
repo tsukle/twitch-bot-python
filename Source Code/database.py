@@ -5,36 +5,37 @@ c = db.cursor()
 
 #This creates the commands table if it does not exist
 def createTable():
-    c.execute("CREATE TABLE IF NOT EXISTS Commands(command TEXT, response TEXT)")
+    c.execute("CREATE TABLE IF NOT EXISTS Commands(command TEXT, response TEXT, level TEXT)")
 
 #query adds command/response to the commands table
-def addCommand(com, response):
+def addCommand(command, response, level):
     try:
-        c.execute("INSERT INTO Commands (command, response) VALUES (?, ?)", (com, response))
+        c.execute("INSERT INTO Commands (command, response, level) VALUES (?, ?, ?)", (command, response, level))
         db.commit()
         return 1
     except sqlite3.OperationalError as e:
         return e
 
 #query removes command/response to the commands table
-def removeCommand(dcom):
+def removeCommand(command):
     try:
-        c.execute("DELETE FROM Commands WHERE command=?", (dcom,))
+        c.execute("DELETE FROM Commands WHERE command=?", (command,))
         db.commit()
         return 1
     except sqlite3.OperationalError as e:
         return e
 
 #query fetches response on request of a command
-def getCommand(com):
-    c.execute("SELECT * FROM Commands WHERE command = ?", (com,))
+def getCommand(command):
+    c.execute("SELECT * FROM Commands WHERE command = ?", (command,))
     response = c.fetchone()
     if response is not None:
+        print(response)
         return response[1]
     else:
         return 0
 
-#query fetches response on request of a command
+#query fetches list off all of the commands available
 def getCommandList():
     x = "Commands: "
     c.execute("SELECT command FROM Commands")
