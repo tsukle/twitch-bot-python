@@ -28,23 +28,23 @@ def removeCommand(command):
 #query fetches response on request of a command
 def getCommand(command):
     c.execute("SELECT * FROM Commands WHERE command = ?", (command,))
-    response = c.fetchone()
+    response = c.fetchall()
     if response is not None:
-        print(response)
-        return response[1]
+        return response
     else:
         return 0
 
 #query fetches list off all of the commands available
 def getCommandList():
     x = "Commands: "
-    c.execute("SELECT command FROM Commands")
+    c.execute("SELECT * FROM Commands")
     d = c.fetchall()
-    #enumerate d and add commands to the string until
     for index, com in enumerate(d):
-        res = com[0]
+        print(com)
+        command = com[0]
+        level = com[2]
         if(index >= len(d) - 1):
-            x = x + res
+            x = x + command + " - " + level
             return x
         else:
-            x = x + res + "  |  "
+            x = x + command + " - " + level + "  |  "

@@ -46,41 +46,70 @@ def chat(setCommands = None):
 
         for line in message:
             response = info(line)
-            # We do not want to return this data.
+            # We do not want to return this data as it is an IRC message from Twitch or JTV.
             if(response["display-name"] == "twitch" or response["display-name"].lower() == opt["username"]):
                 dontDoAnything = 1
 
             # This is a command (Do something with it.).
-            elif(response["user-type"] == "mod" and setCommands == True and response["message"].startswith("!addcom")):
-                spliced = response["message"].split(" ", 3) #Split it 3 times ("!addcom", "user-level", "!command", "response")
-                level = spliced[1]
-                command = spliced[2]
-                response = spliced[3]
+            elif(response["message"].startswith("!addcom") and setCommands == True):
+                if(response["user-type"] == "mod"):
+                    print(Back.WHITE + Fore.BLACK + " " + response["display-name"].upper() + " " + Style.RESET_ALL + " > " + response["message"])
+                    spliced = response["message"].split(" ", 3) #Split it 3 times ("!addcom", "user-level", "!command", "response")
+                    level = spliced[1]
+                    command = spliced[2]
+                    response = spliced[3]
 
-                # Don't allow hard-coded commands to be added
-                if(command == "!addcom" or command == "!delcom"):
-                    dontDoAnything = 1
-
-                # Allow any other commands
-                else:
-                    returned = db.addCommand(command, response, level)
-                    if (returned != 0):
-                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Added to the database.")
+                    # Don't allow hard-coded commands to be added
                     
+                    if(command == "!addcom" or command == "!delcom" or command == "!commands"):
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Is a reserved command.")
+
+                    # Allow any other commands
                     else:
-                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
+                        returned = db.addCommand(command, response, level)
+                        if (returned != 0):
+                            print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Added to the database.")
+                        
+                        else:
+                            print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
+                else:
+                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > User: " + response["display-name"] + " - Does not have permission to use this command.")
             
             # This is a command (Do something with it.).
-            elif(response["user-type"] == "mod" and setCommands == True and response["message"].startswith("!delcom")):
-                spliced = response["message"].split(" ", 1)
-                pre = spliced[1]
-                post = pre.split("\r")
-                command = post[0]
-                returned = db.removeCommand(command)
-                if (returned == 1):
-                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Removed from the database.")
+            elif(response["message"].startswith("!delcom") and setCommands == True):
+                if(response["user-type"] == "mod"): 
+                    print(Back.WHITE + Fore.BLACK + " " + response["display-name"].upper() + " " + Style.RESET_ALL + " > " + response["message"])
+                    spliced = response["message"].split(" ", 1)
+                    pre = spliced[1]
+                    post = pre.split("\r")
+                    command = post[0]
+                    returned = db.removeCommand(command)
+                    if (returned == 1):
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Removed from the database.")
+                    else:
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
                 else:
-                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Error: " + str(returned))
+                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > User: " + response["display-name"] + " - Does not have permission to use this command.")
+
+            elif(response["message"] == "!commands"  and setCommands == True):
+                returned = db.getCommandList()
+                send(returned)
+
+            # This is a command (Do something with it.).
+            elif(response["message"].startswith("!")  and setCommands == True):
+                print(Back.WHITE + Fore.BLACK + " " + response["display-name"].upper() + " " + Style.RESET_ALL + " > " + response["message"])
+                spliced = response["message"].split("\r")
+                command = spliced[0]
+                returned = db.getCommand(command)
+                if(returned == []):
+                    print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Command: " + command + " - Not found in the database.")
+                elif(returned != [] and response["user-type"] != returned[0][2]):
+                    if(response["user-type"] == "mod"):
+                        send(returned[0][1])
+                    else:
+                        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > User: " + response["display-name"] + " - Does not have permission to use this command.")
+                else:
+                    send(returned[0][1])
 
             # We want to return this good stuff.
             else:
@@ -143,7 +172,11 @@ def info(uin):
             info[objTitle] = objValue
 
             if(i >= len(tags) - 1):
-                return info
+                if(info["user-type"] == ""):
+                    info["user-type"] = "all"
+                    return info
+                else:
+                    return info
 
     else:
         info = {} #This will be returned eventually.
