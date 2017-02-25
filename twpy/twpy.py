@@ -16,7 +16,7 @@ db.createTable()
 
 #------------------------------------------------------------------------------------------------
 # Open JSON settings file
-with open("settings_personal.json") as data:
+with open("settings.json") as data:
     opt = json.load(data)
 
 
