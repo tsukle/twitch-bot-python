@@ -6,7 +6,7 @@
 
 Twpy is a python library that allows you to create a fully functional Twitch chat bot in 3 lines of code at it's most basic.
 
-The library is at a fully working state but is still under development as I want to put as much functionality as we can into it.
+The library is at a fully working state but is still under development as we want to put as much functionality as we can into it.
 
 ------
 
