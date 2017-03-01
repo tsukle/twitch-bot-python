@@ -1,7 +1,7 @@
 import socket
 import json
-import database #This will be used at a later point
-from colorama import init, Fore, Back, Style
+import database
+from colorama import init, Fore, Back, Style # Module imported
 from time import sleep
 
 #------------------------------------------------------------------------------------------------
@@ -19,10 +19,33 @@ db.createTable()
 with open("settings.json") as data:
     opt = json.load(data)
 
+#------------------------------------------------------------------------------------------------
+#Initial Prints non DB
+def initNoDB():
+    print("""
+twpy v1.0.3
+https://twpy.uk
+Thank you for using twpy.
+    """)
+
+#------------------------------------------------------------------------------------------------
+#Initial Prints with DB
+def initDB():
+    print("""
+twpy v1.0.3
+https://twpy.uk
+Thank you for using twpy.
+_____________________________________________________            
+!addcom level !command response - for adding commands
+!delcom !command - for removing commands
+!commands - for listing commands
+_____________________________________________________
+    """)
 
 #------------------------------------------------------------------------------------------------
 # Create an IRC connection
 def connect():
+    init()
     s.connect(("irc.twitch.tv", 6667))
     s.send(("CAP REQ :twitch.tv/membership\r\n").encode())
     s.send(("CAP REQ :twitch.tv/commands\r\n").encode())
@@ -37,6 +60,10 @@ def connect():
 def chat(setCommands = None):
     display = "".encode()
     con = connect()
+    if(setCommands == None):
+        initNoDB()
+    else:
+        initDB()
     while True:
         display = con.recv(1024)
         display = display.decode()
@@ -92,8 +119,12 @@ def chat(setCommands = None):
                     print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > User: " + response["display-name"] + " - Does not have permission to use this command.")
 
             elif(response["message"] == "!commands"  and setCommands == True):
+                print(Back.WHITE + Fore.BLACK + " " + response["display-name"].upper() + " " + Style.RESET_ALL + " > " + response["message"])
                 returned = db.getCommandList()
-                send(returned)
+                if(returned == None):
+                    send("There are currently no commands set for this channel.")
+                else:
+                    send(returned)
 
             # This is a command (Do something with it.).
             elif(response["message"].startswith("!")  and setCommands == True):
@@ -136,12 +167,12 @@ def afk(): # This responds to Twitch's afk PING requests.
 
 
 #------------------------------------------------------------------------------------------------
-# Message information
+# Message information, returns attributes.
 def info(uin):
     if(uin.startswith("@badges")):
         info = {} #This will be returned eventually.
 
-        inputSplit = uin.split(":") # Any input from the user will always give 5 objects, the rest are from twitch.
+        inputSplit = uin.split(":")
 
         #This is a check to stop these messages from being sent to chat.
         if(":jtv MODE" in uin or "GLOBALUSERSTATE" in uin or "USERSTATE" in uin or "ROOMSTATE" in uin or "JOIN #" in uin or "tmi.twitch.tv 353" in uin or "tmi.twitch.tv 366" in uin):
@@ -179,9 +210,9 @@ def info(uin):
                     return info
 
     else:
-        info = {} #This will be returned eventually.
-
-        inputSplit = uin.split(" ") # Any input from the user will always give 5 objects, the rest are from twitch.
+        info = {} #This gets returned.
+        # Returns the display-name twitch as all of the messages are from the IRC connection. Dealt with later.
+        inputSplit = uin.split(" ")
 
         info["message"] = ""
         info["channel"] = ""

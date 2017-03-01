@@ -39,12 +39,14 @@ def getCommandList():
     x = "Commands: "
     c.execute("SELECT * FROM Commands")
     d = c.fetchall()
-    for index, com in enumerate(d):
-        print(com)
-        command = com[0]
-        level = com[2]
-        if(index >= len(d) - 1):
-            x = x + command + " - " + level
-            return x
-        else:
-            x = x + command + " - " + level + "  |  "
+    if (d == None):
+        return None
+    else:
+        for index, com in enumerate(d):
+            command = com[0]
+            level = com[2]
+            if(index >= len(d) - 1):
+                x = x + command + " - " + level
+                return x
+            else:
+                x = x + command + " - " + level + "  |  "
