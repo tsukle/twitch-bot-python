@@ -60,7 +60,7 @@ def connect():
 def chat(setCommands = None):
     display = "".encode()
     con = connect()
-    if(setCommands == None):
+    if(setCommands == None): #Ez
         initNoDB()
     else:
         initDB()
