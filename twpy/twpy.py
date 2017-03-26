@@ -172,7 +172,10 @@ def info(uin):
     if(uin.startswith("@badges")):
         info = {} #This will be returned eventually.
 
-        inputSplit = uin.split(":")
+        inputSplit = uin.split(" ", 1)
+        inputTags = inputSplit[0]
+        inputOther = inputSplit[1]
+        inputMessage = inputSplit[1].split(":")
 
         #This is a check to stop these messages from being sent to chat.
         if(":jtv MODE" in uin or "GLOBALUSERSTATE" in uin or "USERSTATE" in uin or "ROOMSTATE" in uin or "JOIN #" in uin or "tmi.twitch.tv 353" in uin or "tmi.twitch.tv 366" in uin):
@@ -182,20 +185,19 @@ def info(uin):
             afk()
         
         # Gets the message sent and the channel it was sent from.
-        elif(len(inputSplit) == 3):
-            msgInit = inputSplit[2]
+        elif(len(inputMessage) == 3):
+            msgInit = inputMessage[2]
             message = msgInit.split("\r")[0]
             info["message"] = message
 
-            chanInit = inputSplit[1]
+            chanInit = inputMessage[1]
             strSplit = chanInit.split(" ")
             chanTear = strSplit[2].split("#")
             channel = chanTear[1]
             info["channel"] = channel
 
         # Splits remaining tags into the dictionary so they can all be called.
-        spcSplit = inputSplit[0].split(" ")
-        tags = spcSplit[0].split(";")
+        tags = inputTags.split(";")
         for i, t in enumerate(tags):
             obj = t.split("=")
             objTitle = obj[0]
