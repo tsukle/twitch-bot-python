@@ -23,7 +23,7 @@ with open("settings.json") as data:
 #Initial Prints non DB
 def initNoDB():
     print("""
-twpy v1.0.3
+twpy v1.0.8
 https://twpy.uk
 Thank you for using twpy.
     """)
@@ -32,7 +32,7 @@ Thank you for using twpy.
 #Initial Prints with DB
 def initDB():
     print("""
-twpy v1.0.3
+twpy v1.0.8
 https://twpy.uk
 Thank you for using twpy.
 _____________________________________________________            
@@ -57,13 +57,24 @@ def connect():
 
 #------------------------------------------------------------------------------------------------
 # Chat
-def chat(setCommands = None):
+def chat(setCommands = None, joinMessage = None):
     display = "".encode()
     con = connect()
-    if(setCommands == None): #Ez
+    if(setCommands != True):
         initNoDB()
+        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Running Non-Database version.")
+
     else:
         initDB()
+        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Running Database version.")
+
+    if(joinMessage == None):
+        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > No join message specified.")
+
+    else:
+        print(Fore.BLACK + Back.CYAN + " INFO " + Style.RESET_ALL + " > Join message specified: " + joinMessage)
+        send(" × " + joinMessage + " × ", True)
+
     while True:
         display = con.recv(1024)
         display = display.decode()
@@ -189,6 +200,12 @@ def info(uin):
             msgInit = inputMessage[2]
             message = msgInit.split("\r")[0]
             info["message"] = message
+
+            if(message.startswith("ACTION")):
+                info["action-message"] = True
+            
+            else:
+                info["action-message"] = False
 
             chanInit = inputMessage[1]
             strSplit = chanInit.split(" ")
