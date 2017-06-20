@@ -1,5 +1,5 @@
 {
-    "username": "twitch username of the bot account (LOWERCASE!)",
+    "username": "twitch username of the bot account (MAKE SURE IT'S LOWERCASE!)",
     "authkey": "get your oauth key from https://twitchapps.com/tmi/ (the key must be from the bot account)",
-    "channel": "name of the channel for the bot to join (LOWERCASE!)"
+    "channel": "name of the channel for the bot to join (MAKE SURE IT'S LOWERCASE!)"
 }
